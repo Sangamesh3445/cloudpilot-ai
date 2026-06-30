@@ -35,6 +35,7 @@ ALLOWED_HOSTS = os.getenv(
 # ------------------------------------------------------------
 
 INSTALLED_APPS = [
+    # Django Apps
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -44,11 +45,15 @@ INSTALLED_APPS = [
 
     # Third-party Apps
     "rest_framework",
+    "rest_framework_simplejwt",
+    "drf_yasg",
     "corsheaders",
 
-    # Local Apps
+        # Local Apps
+    "accounts",
+    "drivers",
     "trips",
-]
+    ]
 
 # ------------------------------------------------------------
 # Middleware
@@ -161,3 +166,37 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # ------------------------------------------------------------
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+# ------------------------------------------------------------
+# Django REST Framework
+# ------------------------------------------------------------
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
+
+    "DEFAULT_PERMISSION_CLASSES": (
+        "rest_framework.permissions.IsAuthenticated",
+    ),
+}
+# ------------------------------------------------------------
+# Swagger Settings
+# ------------------------------------------------------------
+
+SWAGGER_SETTINGS = {
+    "USE_SESSION_AUTH": False,
+    "SECURITY_DEFINITIONS": {
+        "Bearer": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header",
+        }
+    },
+    "SECURITY_REQUIREMENTS": [
+        {
+            "Bearer": []
+        }
+    ],
+}
