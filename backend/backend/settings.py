@@ -49,12 +49,17 @@ INSTALLED_APPS = [
     "drf_yasg",
     "corsheaders",
 
-        # Local Apps
+    # Local Apps
+    # Local Apps
     "accounts",
     "drivers",
     "trips",
-    ]
+    "vehicles",
+    "fleets",
+]
 
+# ------------------------------------------------------------
+# Middleware
 # ------------------------------------------------------------
 # Middleware
 # ------------------------------------------------------------

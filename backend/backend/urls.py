@@ -6,9 +6,11 @@ from drf_yasg import openapi
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="FleetFlow AI API",
+        title="CloudPilot AI API",
         default_version="v1",
-        description="Enterprise Fleet Management API",
+        description="Intelligent Fleet Operations Platform",
+        contact=openapi.Contact(email="sangamesh@example.com"),
+        license=openapi.License(name="MIT License"),
     ),
     public=True,
     permission_classes=(permissions.AllowAny,),
@@ -16,32 +18,33 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("api/", include("drivers.urls")),
 
-    path("api/", include("trips.urls")),
+    # Authentication
     path("api/auth/", include("accounts.urls")),
 
-    re_path(
-        r"^swagger(?P<format>\.json|\.yaml)$",
-        schema_view.without_ui(cache_timeout=0),
-        name="schema-json",
-    ),
+    # Driver Module
+    path("api/", include("drivers.urls")),
 
-    path(
-        "swagger/",
-        schema_view.with_ui(
-            "swagger",
-            cache_timeout=0,
-        ),
+    # Vehicle Module
+    path("api/", include("vehicles.urls")),
+
+    # Fleet Module
+    path("api/", include("fleets.urls")),
+
+    # Trip Module
+    path("api/", include("trips.urls")),
+
+    # Swagger
+    re_path(
+        r"^swagger/$",
+        schema_view.with_ui("swagger", cache_timeout=0),
         name="schema-swagger-ui",
     ),
 
-    path(
-        "redoc/",
-        schema_view.with_ui(
-            "redoc",
-            cache_timeout=0,
-        ),
+    # ReDoc
+    re_path(
+        r"^redoc/$",
+        schema_view.with_ui("redoc", cache_timeout=0),
         name="schema-redoc",
     ),
 ]
