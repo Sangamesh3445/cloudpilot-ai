@@ -1,7 +1,12 @@
-from django.urls import path
-from .views import test_api, plan_trip
+from django.urls import include, path
+from rest_framework.routers import DefaultRouter
+
+from .views import TripViewSet
+
+router = DefaultRouter()
+
+router.register("trips", TripViewSet)
 
 urlpatterns = [
-    path("test/", test_api, name="test-api"),
-    path("plan-trip/", plan_trip, name="plan-trip"),
+    path("", include(router.urls)),
 ]

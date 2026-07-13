@@ -6,6 +6,11 @@ from .serializers import VehicleSerializer
 
 
 class VehicleViewSet(viewsets.ModelViewSet):
+
     queryset = Vehicle.objects.all().order_by("-created_at")
+
     serializer_class = VehicleSerializer
-    permission_classes = [IsAuthenticated]
+
+    permission_classes = [
+        IsAuthenticated,
+    ]

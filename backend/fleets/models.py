@@ -1,51 +1,57 @@
-from django.db import models
 import uuid
+
+from django.db import models
 
 
 class Fleet(models.Model):
-
-    STATUS_CHOICES = [
-        ("ACTIVE", "Active"),
-        ("INACTIVE", "Inactive"),
-    ]
+    class Status(models.TextChoices):
+        ACTIVE = "ACTIVE", "Active"
+        INACTIVE = "INACTIVE", "Inactive"
+        MAINTENANCE = "MAINTENANCE", "Maintenance"
 
     id = models.UUIDField(
         primary_key=True,
         default=uuid.uuid4,
-        editable=False,
+        editable=False
     )
 
     fleet_name = models.CharField(
-        max_length=100,
-        unique=True,
+        max_length=100
     )
 
     fleet_code = models.CharField(
         max_length=20,
-        unique=True,
+        unique=True
     )
 
     description = models.TextField(
         blank=True,
+        null=True
     )
 
     manager_name = models.CharField(
-        max_length=100,
+        max_length=100
     )
 
     status = models.CharField(
         max_length=20,
-        choices=STATUS_CHOICES,
-        default="ACTIVE",
+        choices=Status.choices,
+        default=Status.ACTIVE
     )
 
     created_at = models.DateTimeField(
-        auto_now_add=True,
+        auto_now_add=True
     )
 
     updated_at = models.DateTimeField(
-        auto_now=True,
+        auto_now=True
     )
 
+    class Meta:
+        db_table = "fleets"
+        ordering = ["fleet_name"]
+        verbose_name = "Fleet"
+        verbose_name_plural = "Fleets"
+
     def __str__(self):
-        return self.fleet_name
+        return f"{self.fleet_name} ({self.fleet_code})"

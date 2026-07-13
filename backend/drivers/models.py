@@ -3,6 +3,13 @@ import uuid
 
 
 class Driver(models.Model):
+
+    STATUS_CHOICES = [
+        ("AVAILABLE", "Available"),
+        ("DRIVING", "Driving"),
+        ("RESTING", "Resting"),
+    ]
+
     id = models.UUIDField(
         primary_key=True,
         default=uuid.uuid4,
@@ -23,6 +30,12 @@ class Driver(models.Model):
     )
 
     license_expiry = models.DateField()
+
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default="AVAILABLE",
+    )
 
     created_at = models.DateTimeField(auto_now_add=True)
 
