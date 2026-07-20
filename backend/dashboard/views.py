@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
-from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 
+from core.api_response import APIResponse
 from .services import DashboardService
 
 
@@ -15,4 +15,7 @@ class DashboardAPIView(APIView):
 
         data = DashboardService.get_dashboard_data()
 
-        return Response(data)
+        return APIResponse.success(
+            data=data,
+            message="Dashboard data retrieved successfully.",
+        )

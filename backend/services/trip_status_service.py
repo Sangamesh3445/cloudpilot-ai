@@ -1,7 +1,5 @@
 from django.db import transaction
 
-from trips.models import Trip
-
 
 class TripStatusService:
 

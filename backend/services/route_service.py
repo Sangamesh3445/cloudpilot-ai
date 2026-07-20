@@ -1,7 +1,6 @@
 import os
 
 import requests
-
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -28,14 +27,21 @@ class RouteService:
             ]
         }
 
-        response = requests.post(
-            cls.BASE_URL,
-            json=body,
-            headers=headers,
-            timeout=30,
-        )
+        try:
 
-        response.raise_for_status()
+            response = requests.post(
+                cls.BASE_URL,
+                json=body,
+                headers=headers,
+                timeout=30,
+            )
+
+            response.raise_for_status()
+
+        except requests.exceptions.RequestException as exc:
+            raise Exception(
+                f"Unable to calculate route: {exc}"
+            )
 
         data = response.json()
 
