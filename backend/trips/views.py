@@ -55,6 +55,27 @@ class TripViewSet(viewsets.ModelViewSet):
     ordering = [
         "-created_at",
     ]
+    def create(self, request, *args, **kwargs):
+
+        print("\n========== REQUEST DATA ==========")
+        print(request.data)
+
+        serializer = self.get_serializer(data=request.data)
+
+        if not serializer.is_valid():
+            print("\n========== SERIALIZER ERRORS ==========")
+            print(serializer.errors)
+            return Response(serializer.errors, status=400)
+
+        try:
+            self.perform_create(serializer)
+        except Exception as e:
+            print("\n========== SERVICE ERROR ==========")
+            print(type(e))
+            print(e)
+            raise
+
+        return Response(serializer.data, status=201)
 
     @action(detail=True, methods=["post"])
     def complete(self, request, pk=None):

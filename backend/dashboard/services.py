@@ -82,6 +82,15 @@ class DashboardService:
         active_fleets = Fleet.objects.filter(
             status="ACTIVE"
         ).count()
+        fleet_list = []
+
+        for fleet in Fleet.objects.all():
+            fleet_list.append({
+                "id": str(fleet.id),
+                "fleet_name": fleet.fleet_name,
+                "status": fleet.status,
+                "vehicle_count": fleet.vehicles.count(),
+            })
 
         # --------------------------------------------------
         # Trip Analytics
@@ -189,6 +198,7 @@ class DashboardService:
             "fleets": {
                 "total": total_fleets,
                 "active": active_fleets,
+                "list": fleet_list,
             },
 
             "analytics": {

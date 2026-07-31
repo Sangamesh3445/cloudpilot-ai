@@ -1,0 +1,62 @@
+version: "3.9"
+
+services:
+
+  db:
+    image: postgres:17
+    container_name: fleetflow_postgres
+    restart: always
+
+    environment:
+      POSTGRES_DB: fleetflow
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Sangamesh@445
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ./backend
+
+    container_name: fleetflow_backend
+    restart: always
+
+    command: python manage.py runserver 0.0.0.0:8000
+
+    volumes:
+      - ./backend:/app
+
+    ports:
+      - "8000:8000"
+
+    depends_on:
+      - db
+
+    env_file:
+      - ./backend/.env
+
+  frontend:
+    build:
+      context: ./frontend
+
+    container_name: fleetflow_frontend
+    restart: always
+
+    command: npm run dev -- --host
+
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+
+    ports:
+      - "5173:5173"
+
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
