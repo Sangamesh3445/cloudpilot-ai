@@ -1,15 +1,19 @@
 import axios from "axios";
 
+// ============================
+// Axios Instance
+// ============================
+
 const api = axios.create({
-    baseURL: "http://127.0.0.1:8000/api/",
+    baseURL: "/api/",
     headers: {
         "Content-Type": "application/json",
     },
 });
 
-// ----------------------------
+// ============================
 // Request Interceptor
-// ----------------------------
+// ============================
 
 api.interceptors.request.use(
     (config) => {
@@ -24,9 +28,9 @@ api.interceptors.request.use(
     (error) => Promise.reject(error)
 );
 
-// ----------------------------
+// ============================
 // Response Interceptor
-// ----------------------------
+// ============================
 
 api.interceptors.response.use(
     (response) => response,
@@ -44,7 +48,6 @@ api.interceptors.response.use(
             try {
                 const refresh = localStorage.getItem("refresh");
 
-                // No refresh token available
                 if (!refresh) {
                     localStorage.removeItem("access");
                     localStorage.removeItem("refresh");
@@ -52,31 +55,28 @@ api.interceptors.response.use(
                     return Promise.reject(error);
                 }
 
-                // Request new access token
                 const response = await axios.post(
-                    "http://127.0.0.1:8000/api/auth/refresh/",
+                    "/api/auth/refresh/",
                     {
-                        refresh: refresh,
+                        refresh,
                     }
                 );
 
                 const newAccess = response.data.access;
 
-                // Save new access token
                 localStorage.setItem("access", newAccess);
 
-                // Update axios default header
                 api.defaults.headers.common[
                     "Authorization"
                 ] = `Bearer ${newAccess}`;
 
-                // Update original request header
-                originalRequest.headers.Authorization = `Bearer ${newAccess}`;
+                originalRequest.headers.Authorization =
+                    `Bearer ${newAccess}`;
 
-                // Retry original request
                 return api(originalRequest);
+
             } catch (refreshError) {
-                // Refresh token expired or invalid
+
                 localStorage.removeItem("access");
                 localStorage.removeItem("refresh");
 
